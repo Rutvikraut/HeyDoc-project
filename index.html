@@ -27,7 +27,7 @@
         <section class="header-text" id="header-text">
             <span>Are You Sick ?</span>
             <h1>Book Your Appointment</h1>
-            <a href="#">Book Appointment</a>
+            <a href="#book-appointment">Book Appointment</a>
         </section>
     </header>
     <section class="feature">
@@ -84,24 +84,35 @@
             
         </div>
     </section>
-    <section class="contact-us" id="contact-us">
-        <div class="heading contact-heading">
-            <h2>Contact Us</h2>
+    <section class="book-appointment" id="book-appointment">
+        <div class="booking-heading">
+            <h2>Book An Appointment</h2>
+            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
         </div>
-        <div class="contact-form">
+        <div class="container">
+            
             <div class="form-container">
                 <form action="" >
-                    <input type="text" class="input-field" placeholder="Name">
-                    <input type="number" class="input-field" placeholder="Mobile Number">
-                    <input type="email" class="input-field" placeholder="Email">
-                    <input type="text" class="input-field message" placeholder="Message">
-                    <input type="submit" name="submit" class="input-field submit-btn">
+                    <div class="name-field">
+                        <input type="text" class="input-field" placeholder="First Name" required>
+                        <input type="text" class="input-field" placeholder="Last Name" required>
+                    </div>
+                    <div class="contact-field">
+                        <input type="number" class="input-field" placeholder="Mobile Number" required>
+                        <input type="date" class="input-field" required >
+                    </div>
+                    <div class="message-field">
+                        <textarea class="text-field" placeholder="Message (Optional)" name="" id="" cols="30" rows="10"></textarea>
+                    </div>
+                    <div class="form-submit">
+                        <input type="submit" class="submit-btn" value="Make an Appointment">
+                    </div>
                 </form>
             </div>
         </div>
     </section>
     <footer>
-        <h3>Copyright Reserved @2023 Rutvik Raut</h3>
+        <h3>Copyright Reserved @2022 Rutvik Raut</h3>
     </footer>
 </body>
 </html>
