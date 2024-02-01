@@ -27,6 +27,11 @@ nav{
 .logo{
     font-size: 2em;
     letter-spacing: 2px;
+    text-align: center;
+}
+.logo #sublogo{
+    font-size: 12px;
+    text-align: center;
 }
 .menu a{
     text-decoration: none;
