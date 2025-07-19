@@ -8,8 +8,8 @@ create table patients(
     date_of_birth DATE NOT NULL,
     gender ENUM('Male','Female','Other') NOT NULL,
     is_verified BOOLEAN DEFAULT FALSE NOT NULL,
-    verify_token VARCHAR(100),
-    verify_token_expiry DATETIME,
     created_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    verify_token VARCHAR(100),
+    verify_token_expiry DATETIME
 )
