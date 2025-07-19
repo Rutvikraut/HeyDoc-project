@@ -2,6 +2,8 @@ import pool from "../db/configDb.js"
 import bcrypt from "bcrypt"
 import crypto from "crypto"
 import { errorResponse, successResponse } from "../utils/resultUtil.js"
+import cookieParser from "cookie-parser"
+import jwt from "jsonwebtoken"
 
 const addDoctor = async(req,res)=>{
     const {
@@ -64,6 +66,44 @@ const verifyEmail = (req,res)=>{
     })
 }
 
+const loginDocter = async(req,res)=>{
+    const {email,password} = req.body
+
+    const sql = `select d.id,d.first_name,d.last_name,d.phone_number,d.email,d.date_of_birth,d.gender,d.password,s.name as specialization from doctors d join specializations s on d.specialization_id=s.id where d.is_verified=1 and email=?`
+    const insertTokenQuery = `update doctors set auth_token=? where id=?`
+
+    pool.query(sql,[email],async (error,data)=>{
+        if(error)
+            return errorResponse(res,"Internal Server Error",500,error)
+
+        const validPassword = await bcrypt.compare(password,data[0].password)
+        if(validPassword){
+            const doctor = data[0]
+            const authToken = jwt.sign({
+                doctorId:doctor.id
+            },"c27d6d95317574e3b2f211a17cf3e9a1")
+
+            
+            pool.query(insertTokenQuery,[authToken,doctor.id],(e,result)=>{
+                if(e)
+                    return errorResponse(res,"Something went wrong",500,e)
+                
+                res.cookie('authToken',authToken,{
+                    httpOnly:true,
+                    secure:true,
+                })
+
+                return successResponse(res,"Login success",200,{
+                    token:authToken,
+                    data
+                })
+            })
+        }else{
+            return errorResponse(res,"Invalid Password",404,error)
+        }
+    })
+}
+
 const getAllDoctors = async(req,res)=>{
     const page = parseInt(req.query.page) || 1
     const limit = 10
@@ -95,5 +135,6 @@ const getAllDoctors = async(req,res)=>{
 export {
     addDoctor,
     verifyEmail,
+    loginDocter,
     getAllDoctors,
 }
