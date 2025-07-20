@@ -1,6 +1,8 @@
 import pool from "../db/configDb.js"
 import bcrypt from "bcrypt"
 import crypto from "crypto"
+import jwt from "jsonwebtoken"
+
 import { errorResponse, successResponse } from "../utils/resultUtil.js"
 
 const addPatient = async(req,res)=>{
@@ -62,7 +64,46 @@ const verifyEmail = (req,res)=>{
     })
 }
 
+const loginPatient = async(req,res)=>{
+    const {email,password} = req.body
+
+    const sql = `select id,first_name,last_name,phone_number,email,date_of_birth,gender,password from patients where is_verified=1 and email=?`
+    const insertTokenQuery = `update patients set auth_token=? where id=?`
+
+    pool.query(sql,[email],async (error,data)=>{
+        if(error)
+            return errorResponse(res,"Internal Server Error",500,error)
+
+        const validPassword = await bcrypt.compare(password,data[0].password)
+        if(validPassword){
+            const patient = data[0]
+            const authToken = jwt.sign({
+                patientId:patient.id
+            },"c27d6d95317574e3b2f211a17cf3e9a1")
+
+            
+            pool.query(insertTokenQuery,[authToken,patient.id],(e,result)=>{
+                if(e)
+                    return errorResponse(res,"Something went wrong",500,e)
+                
+                res.cookie('authToken',authToken,{
+                    httpOnly:true,
+                    secure:true,
+                })
+
+                return successResponse(res,"Login success",200,{
+                    token:authToken,
+                    data
+                })
+            })
+        }else{
+            return errorResponse(res,"Invalid Password",404,error)
+        }
+    })
+}
+
 export {
     addPatient,
-    verifyEmail
+    verifyEmail,
+    loginPatient
 }
